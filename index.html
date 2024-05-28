@@ -6,7 +6,7 @@
 <body>
     <h1>Wedding Photo Booth</h1>
     <div id="camera">
-        <video id="video" width="640" height="480" autoplay></video>
+        <video id="video" width="640" height="480" autoplay playsinline></video>
         <button id="capture">촬영</button>
     </div>
     <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
@@ -41,7 +41,7 @@
         // Access the device camera and stream to video element
         async function setupCamera() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
                 if ('srcObject' in video) {
                     video.srcObject = stream;
                 } else {
@@ -54,11 +54,6 @@
         }
 
         setupCamera();
-
-        // Fix for iOS Safari
-        video.setAttribute('autoplay', '');
-        video.setAttribute('muted', '');
-        video.setAttribute('playsinline', '');
 
         // Capture the photo on button click
         capture.addEventListener('click', () => {
