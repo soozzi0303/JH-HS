@@ -1,41 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Wedding Photobooth</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Wedding Photo Booth</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #camera {
+            text-align: center;
+        }
+        #video {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+        }
+        #capture {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-
-  <div class="photobooth">
-    <div class="controls">
-      <button onClick="takePhoto()">Take Photo</button>
-<!--       <div class="rgb">
-        <label for="rmin">Red Min:</label>
-        <input type="range" min=0 max=255 name="rmin">
-        <label for="rmax">Red Max:</label>
-        <input type="range" min=0 max=255 name="rmax">
-        <br>
-        <label for="gmin">Green Min:</label>
-        <input type="range" min=0 max=255 name="gmin">
-        <label for="gmax">Green Max:</label>
-        <input type="range" min=0 max=255 name="gmax">
-        <br>
-        <label for="bmin">Blue Min:</label>
-        <input type="range" min=0 max=255 name="bmin">
-        <label for="bmax">Blue Max:</label>
-        <input type="range" min=0 max=255 name="bmax">
-      </div> -->
+    <h1>Wedding Photo Booth</h1>
+    <div class="photobooth">
+        <div class="controls">
+            <video id="video" autoplay playsinline></video>
+            <button id="capture">촬영</button>
+            <div class="rgb">
+                <label for="rmin">Red Min:</label>
+                <input type="range" min=0 max=255 name="rmin">
+                <label for="rmax">Red Max:</label>
+                <input type="range" min=0 max=255 name="rmax">
+                <br>
+                <label for="gmin">Green Min:</label>
+                <input type="range" min=0 max=255 name="gmin">
+                <label for="gmax">Green Max:</label>
+                <input type="range" min=0 max=255 name="gmax">
+                <br>
+                <label for="bmin">Blue Min:</label>
+                <input type="range" min=0 max=255 name="bmin">
+                <label for="bmax">Blue Max:</label>
+                <input type="range" min=0 max=255 name="bmax">
+            </div>
+        </div>
     </div>
+        
+    <canvas class="canvas" width="640" height="480" style="display: none;"></canvas>
+    <div class="album"></div>
+        
+    <audio class="snap" src="./snap.mp3" hidden></audio>
 
-    <canvas class="photo"></canvas>
-    <video class="player"></video>
-    <div class="strip"></div>
-  </div>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-storage.js"></script>
 
-  <audio class="snap" src="./snap.mp3" hidden></audio>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBaV1m_SN5iroLKOXUJNC9OWWv8bS8dHgA",
+            authDomain: "wedding-9043e.firebaseapp.com",
+            projectId: "wedding-9043e",
+            storageBucket: "wedding-9043e.appspot.com",
+            messagingSenderId: "700855228549",
+            appId: "1:700855228549:web:892b1041102ab61c8eb1ec",
+            measurementId: "G-QC6QY62JB2"
+        };
 
-  <script src="scripts.js"></script>
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
 
+        const video = document.getElementById('video');
+        const canvas = document.querySelector('.canvas');
+        const context = canvas.getContext('2d');
+        const capture = document.getElementById('capture');
+        const album = document.querySelector('.album');
+
+        async function setupCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing the camera: ", err);
+            }
+        }
+
+        setupCamera();
+
+        capture.addEventListener('click', () => {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((blob) => {
+                const storageRef = storage.ref();
+                const imageRef = storageRef.child('wedding-photos/' + Date.now() + '.png');
+                imageRef.put(blob).then((snapshot) => {
+                    return imageRef.getDownloadURL();
+                }).then((url) => {
+                    console.log('File available at', url);
+                    const img = document.createElement('img');
+                    img.src = url;
+                    album.appendChild(img);
+                }).catch((error) => {
+                    console.error('Error uploading or getting download URL:', error);
+                });
+            }, 'image/png');
+        });
+    </script>
 </body>
 </html>
