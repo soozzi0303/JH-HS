@@ -1,49 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wedding Photo Booth</title>
 </head>
 <body>
     <h1>Wedding Photo Booth</h1>
-    <video id="video" width="640" height="480" autoplay></video>
-    <button id="snap">Capture</button>
     <div id="camera">
         <video id="video" width="640" height="480" autoplay></video>
+        <button id="capture">촬영</button>
     </div>
     <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
     <div id="album"></div>
 
+    <!-- Include Firebase libraries -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-storage.js"></script>
+
     <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
-              apiKey: "AIzaSyBaV1m_SN5iroLKOXUJNC9OWWv8bS8dHgA",
-              authDomain: "wedding-9043e.firebaseapp.com",
-              projectId: "wedding-9043e",
-              storageBucket: "wedding-9043e.appspot.com",
-              messagingSenderId: "700855228549",
-              appId: "1:700855228549:web:892b1041102ab61c8eb1ec",
-              measurementId: "G-QC6QY62JB2"
-         };
-         apiKey: "AIzaSyBaV1m_SN5iroLKOXUJNC9OWWv8bS8dHgA",
-          authDomain: "wedding-9043e.firebaseapp.com",
-          projectId: "wedding-9043e",
-          storageBucket: "wedding-9043e.appspot.com",
-          messagingSenderId: "700855228549",
-          appId: "1:700855228549:web:892b1041102ab61c8eb1ec",
-          measurementId: "G-QC6QY62JB2"
+          apiKey: "AIzaSyBaV1m_SN5iroLKOXUJNC9OWWv8bS8dHgA",
+          authDomain: "wedding-9043e.firebaseapp.com",
+          projectId: "wedding-9043e",
+          storageBucket: "wedding-9043e.appspot.com",
+          messagingSenderId: "700855228549",
+          appId: "1:700855228549:web:892b1041102ab61c8eb1ec",
+          measurementId: "G-QC6QY62JB2"
         };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const storage = firebase.storage();
+
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const context = canvas.getContext('2d');
-        const snap = document.getElementById('snap');
+        const capture = document.getElementById('capture');
         const album = document.getElementById('album');
+
         // Access the device camera and stream to video element
         async function setupCamera() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = stream;
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                if ('srcObject' in video) {
+                    video.srcObject = stream;
+                } else {
+                    video.src = window.URL.createObjectURL(stream);
+                }
+                video.play();
             } catch (err) {
                 console.error("Error accessing the camera: ", err);
             }
         }
+
         setupCamera();
+
+        // Fix for iOS Safari
+        video.setAttribute('autoplay', '');
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+
+        // Capture the photo on button click
+        capture.addEventListener('click', () => {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((blob) => {
+                const storageRef = storage.ref();
+                const imageRef = storageRef.child('wedding-photos/' + Date.now() + '.png');
+                imageRef.put(blob).then((snapshot) => {
+                    return imageRef.getDownloadURL();
+                }).then((url) => {
+                    console.log('File available at', url);
+                    // Display the image in an album
+                    const img = document.createElement('img');
+                    img.src = url;
+                    album.appendChild(img);
+                }).catch((error) => {
+                    console.error('Error uploading or getting download URL:', error);
+                });
+            }, 'image/png');
+        });
+    </script>
+</body>
+</html>
