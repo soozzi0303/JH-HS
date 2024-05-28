@@ -1,3 +1,5 @@
+const video = document.querySelector('.player');
+// HTML의 비디오 요소를 선택한다. 카메라의 실시간 영상을 표시함.
 const canvas = document.querySelector('.photo');
 // HTML의 캔버스 요소를 선택함. 사진을 넣기 위해 사용됨.
 const ctx = canvas.getContext('2d');
