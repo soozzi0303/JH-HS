@@ -2,11 +2,30 @@
 <html>
 <head>
     <title>Wedding Photo Booth</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #camera {
+            text-align: center;
+        }
+        #video {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+        }
+        #capture {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <h1>Wedding Photo Booth</h1>
     <div id="camera">
-        <video id="video" width="640" height="480" autoplay playsinline></video>
+        <video id="video" autoplay playsinline></video>
         <button id="capture">촬영</button>
     </div>
     <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
