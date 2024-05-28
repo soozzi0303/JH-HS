@@ -37,13 +37,16 @@ const firebaseConfig = {
         const album = document.getElementById('album');
 
         // Access the device camera and stream to video element
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
+        async function setupCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 video.srcObject = stream;
-            })
-            .catch(err => {
+            } catch (err) {
                 console.error("Error accessing the camera: ", err);
-            });
+            }
+        }
+
+        setupCamera();
 
         // Capture the photo on button click
         snap.addEventListener('click', () => {
