@@ -3,7 +3,6 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     background-color: transparent;
-    transform: rotate(90deg);
     @font-face {
     font-family: 'GangwonEdu_OTFBoldA';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
@@ -52,10 +51,12 @@ html {
 .photo {
   width: 100%;
   float: left;
+  transform: rotate(90deg);
 }
 
 .player {
   position: absolute;
+  transform: rotate(90deg);
   top: 20px;
   right: 20px;
   width:200px;
