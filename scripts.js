@@ -78,17 +78,25 @@ function paintToCanvas() {
 function takePhoto() {
   // played the sound
   snap.currentTime = 0;
-  snap.play();
+ // snap.play()를 쓰면 사진 찍는 소리가 재생됨. 
 
   // take the data out of the canvas
   const data = canvas.toDataURL('image/jpeg');
+    // 캔버스 내용을 JPEG 이미지 데이터 URL로 변환한다.
   const link = document.createElement('a');
+    // 새로운 앵커 요소를 만든다.
   link.href = data;
+    // 앵커 요소의 href 속성을 이미지 데이터 URL로 설정한다.
   link.setAttribute('download', 'handsome');
+    // 앵커 요소가 파일을 다운로드하도록 설정한다. 
   link.innerHTML = `<img src="${data}" alt="Handsome Man" />`;
+    // 앵커 요소의 내용을 이미지로 설정한다. 
   strip.insertBefore(link, strip.firstChild);
+    // 새 사진 링크를 사진 목록의 맨 앞에 추가한다. 
 }
 
+// 현재 이 함수들은 주석 처리되어 있어 호출되지 않지만, 필요시 주석을 해제하고 사용 가능.
+// 픽셀 데이터를 조작하여 필터 효과를 적용한다. 
 function redEffect(pixels) {
   for (let i = 0; i < pixels.data.length; i+=4) {
     pixels.data[i + 0] = pixels.data[i + 0] + 200; // RED
@@ -135,5 +143,5 @@ function greenScreen(pixels) {
 }
 
 getVideo();
-
+// 함수를 호출해 비디오 스트림을 가져온다. 비디오가 재생 가능할 때 paintToCanvas 함수를 호출하여 캔버스에 비디오를 그리기 시작한다. 
 video.addEventListener('canplay', paintToCanvas);
