@@ -1,22 +1,35 @@
 const video = document.querySelector('.player');
+// HTML의 비디오 요소를 선택한다. 카메라의 실시간 영상을 표시함.
 const canvas = document.querySelector('.photo');
+// HTML의 캔버스 요소를 선택함. 사진을 넣기 위해 사용됨.
 const ctx = canvas.getContext('2d');
+// 캔버스의 2D 그리기 컨텍스트를 가져옴. 이는 캔버스에 그림을 그리기 위한 메소드와 속성을 포함.
 const strip = document.querySelector('.strip');
+// 사진이 저장될 div 요소를 선택함.
 const snap = document.querySelector('.snap');
+// 사진 찍을 때 재생될 오디오 요소를 선택함.
 
 // Fix for iOS Safari from https://leemartin.dev/hello-webrtc-on-safari-11-e8bcb5335295
 video.setAttribute('autoplay', '');
+// autoplay: 비디오를 자동 재생합니다.
 video.setAttribute('muted', '');
+// muted: 비디오의 소리를 음소거합니다.
 video.setAttribute('playsinline', '')
+// playsinline: 비디오를 전체 화면이 아닌 인라인으로 재생합니다.
 
-const constraints = {
-  audio: false,
-  video: {
-    facingMode: 'user'
-  }
+function getConstraints() {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const facingMode = isMobile ? 'environment' : 'user';
+  return{
+    audio: false,
+    video: {
+      facingMode: facingMode
+    }
+  };
 }
 
 function getVideo() {
+  const constraints = gestConstraints();
   navigator.mediaDevices.getUserMedia(constraints)
     .then(localMediaStream => {
       console.log(localMediaStream);
