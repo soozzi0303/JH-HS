@@ -8,6 +8,7 @@ const strip = document.querySelector('.strip');
 // 사진이 저장될 div 요소를 선택함.
 const snap = document.querySelector('.snap');
 // 사진 찍을 때 재생될 오디오 요소를 선택함.
+const capture = document.getElementById('capture');
 
 // Fix for iOS Safari from https://leemartin.dev/hello-webrtc-on-safari-11-e8bcb5335295
 video.setAttribute('autoplay', '');
@@ -50,7 +51,7 @@ function getVideo() {
       video.play();
     })
     .catch(err => {
-      console.error(`OH NO!!!!`, err);
+      console.error(`Error accessing media devices!!!!`, err);
     });
 }
 
