@@ -5,8 +5,10 @@
 </head>
 <body>
     <h1>Wedding Photo Booth</h1>
-    <video id="video" width="640" height="480" autoplay></video>
-    <button id="snap">Capture</button>
+    <div id="camera">
+        <video id="video" width="640" height="480" autoplay></video>
+        <button id="snap">Capture</button>
+    </div>
     <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
     <div id="album"></div>
 
@@ -17,14 +19,14 @@
     <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
-              apiKey: "AIzaSyBaV1m_SN5iroLKOXUJNC9OWWv8bS8dHgA",
-              authDomain: "wedding-9043e.firebaseapp.com",
-              projectId: "wedding-9043e",
-              storageBucket: "wedding-9043e.appspot.com",
-              messagingSenderId: "700855228549",
-              appId: "1:700855228549:web:892b1041102ab61c8eb1ec",
-              measurementId: "G-QC6QY62JB2"
-         };
+         apiKey: "AIzaSyBaV1m_SN5iroLKOXUJNC9OWWv8bS8dHgA",
+          authDomain: "wedding-9043e.firebaseapp.com",
+          projectId: "wedding-9043e",
+          storageBucket: "wedding-9043e.appspot.com",
+          messagingSenderId: "700855228549",
+          appId: "1:700855228549:web:892b1041102ab61c8eb1ec",
+          measurementId: "G-QC6QY62JB2"
+        };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
