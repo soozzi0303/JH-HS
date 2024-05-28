@@ -8,7 +8,6 @@ const strip = document.querySelector('.strip');
 // 사진이 저장될 div 요소를 선택함.
 const snap = document.querySelector('.snap');
 // 사진 찍을 때 재생될 오디오 요소를 선택함.
-const capture = document.getElementById('capture');
 
 // Fix for iOS Safari from https://leemartin.dev/hello-webrtc-on-safari-11-e8bcb5335295
 video.setAttribute('autoplay', '');
@@ -18,19 +17,14 @@ video.setAttribute('muted', '');
 video.setAttribute('playsinline', '')
 // playsinline: 비디오를 전체 화면이 아닌 인라인으로 재생합니다.
 
-function getConstraints() {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  const facingMode = isMobile ? 'environment' : 'user';
-  return{
+const constraints = {
     audio: false,
     video: {
-      facingMode: facingMode
+      facingMode: 'environment'
     }
   };
-}
 
 function getVideo() {
-  const constraints = gestConstraints();
   navigator.mediaDevices.getUserMedia(constraints)
     .then(localMediaStream => {
       console.log(localMediaStream);
@@ -51,7 +45,7 @@ function getVideo() {
       video.play();
     })
     .catch(err => {
-      console.error(`Error accessing media devices!!!!`, err);
+      console.error(`OH NO!!!!`, err);
     });
 }
 
