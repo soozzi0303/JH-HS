@@ -7,6 +7,10 @@ body {
     font-weight: normal;
     font-style: normal;
 }
+    h1 {
+        color: blue;
+        text-align: center;
+    }
 
 
 html {
